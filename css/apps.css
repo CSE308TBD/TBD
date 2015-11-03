@@ -1,0 +1,102 @@
+body {
+background-image: url(../img/bg.jpg);
+background-position: center center;
+background-repeat: no-repeat;
+background-attachment: fixed;
+background-size: cover;
+}
+.login-wrapper {
+	top: 25%;
+	width: 100%;
+	position: absolute;
+}
+.login-main {
+	width: 313px;
+	height: 325px;
+	margin: 0 auto;
+	background: #fff;
+	border: 1px #fff solid;
+}
+
+.navg-tabs li {
+	float: left;
+	width: 50%;
+	background: #3bc0c3;
+}
+.navg-tabs li a {
+	color: #fff;
+	font-size: 14px;
+	text-align: center;
+}
+.navg-tabs li.active {
+	background: #fff;
+}
+.navg-tabs li.active a {
+	color: #3d5050;
+}
+.nav>li>a:focus, .nav>li>a:hover {
+	background: transparent;
+}
+
+.login_form {
+	padding: 40px 30px;
+}
+
+.form-control {
+	border-radius: 0;
+}
+.form-control:focus {
+	box-shadow: none;
+}
+.checkbox label, .radio label {
+	padding: 0;
+	color: #3bc0c3;
+}
+.form-control:focus {
+	border-color: #3bc0c3;
+}
+.btn-ddd {
+	background: #3bc0c3;
+	border-radius: 0;
+	color: #fff;
+}
+.btn-ddd:hover {
+	color: #fff;
+}
+.ico-user {
+	background: url(../img/user.png) no-repeat;
+	width: 15px;
+	height: 16px;
+	top: 9px;
+	left: 10px;
+	position: absolute;
+}
+.ico-pass {
+	background: url(../img/pass.png) no-repeat;
+	width: 13px;
+	height: 17px;
+	top: 8px;
+	left: 10px;
+	position: absolute;
+}
+.form-group {
+	position: relative;
+}
+
+.form-control {
+	text-indent: 1.5em;
+}
+.checkbox, .radio {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+.footer {
+	position: absolute;
+    bottom: 20px;
+    background: rgba(3,109,220,.5);
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    height: 50px;
+    line-height: 50px;
+}

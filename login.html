@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="us-EN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Stony Brook University Test Center Login</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/apps.css" rel="stylesheet">
+    <link href="css/square/green.css" rel="stylesheet">
+  </head>
+  <body>
+  <% Session.Abandon %>
+    <div class="login-wrapper">
+      <div class="login-main">
+        <div class="bs-example bs-example-tabs" data-example-id="togglable-tabs">
+          <ul id="myTabs" class="nav navg-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">I am Instructor</a></li>
+            <li role="presentation"><a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile">I am Student</a></li>
+          </ul>
+          <div id="myTabContent" class="tab-content">
+            <div role="tabpanel" class="tab-pane fade in active" id="home" aria-labelledBy="home-tab">
+              <div class="login_form">
+                <form id="loginI" name="loginI" action="loginI.php" method="post" >
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Username" >
+                    <span class="ico-user"></span>
+                  </div>
+                  <div class="form-group">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                    <span class="ico-pass"></span>
+                  </div>
+                  <p id="alert"></p>
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox"> Remember me
+                    </label>
+                  </div>
+<input type="submit" class="btn btn-ddd btn-lg btn-block" name="submitI" value="Login" id="submitI">
+                </form>
+              </div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledBy="profile-tab">
+              <div class="login_form">
+                 <form name="loginS" id="loginS" action="loginS.php" method="post">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="names" name="name" placeholder="Username">
+                    <span class="ico-user"></span>
+                  </div>
+                  <div class="form-group">
+                    <input type="password" class="form-control" id="passwords" name="password" placeholder="Password">
+                    <span class="ico-pass"></span>
+                  </div>
+                    <p id="alert2"></p>
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox"> Remember me
+                    </label>
+                  </div>
+                <input type="submit" class="btn btn-ddd btn-lg btn-block" name="submitS" id="submitS" value="Login">
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> 
+    </div>  
+    <div class="footer">
+      <p>Copyright © 2015 Stony Brook University Test Center</p>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/icheck.js"></script>
+    <script>
+$(document).ready(function(){
+  $('input').iCheck({
+    checkboxClass: 'icheckbox_square-green',
+    radioClass: 'iradio_square-green',
+    increaseArea: '20%' // optional
+  });
+});
+</script>
+<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+<script src="js/login.js"></script>
+  </body>
+</html>

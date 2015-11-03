@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="us-EN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Administrator Login</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/apps.css" rel="stylesheet">
+    <link href="css/square/green.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="login-wrapper">
+      <div class="login-main">
+        <div class="bs-example bs-example-tabs" data-example-id="togglable-tabs">
+          <ul id="myTabs" class="nav navg-tabs" role="tablist">
+            <li role="presentation"   ><div style="  color: #FFF; font-size: 18px; background: #3bc0c3; width: 313px; height: 40px; text-align: center; line-height:40px ">I am Administrator</div></li>
+          </ul>
+          <div id="myTabContent" class="tab-content">
+            <div role="tabpanel" class="tab-pane fade in active" id="home" aria-labelledBy="home-tab">
+              <div class="login_form">
+                <form name="loginA" id="loginA" action="loginA.php" method="post">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="namea" name="name" placeholder="Username">
+                    <span class="ico-user"></span>
+                  </div>
+                  <div class="form-group">
+                    <input type="password" class="form-control" id="passworda" name="password" placeholder="Password">
+                    <span class="ico-pass"></span>
+                  </div>
+                  <p id="alert2"></p>
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox"> Remember me
+                    </label>
+                  </div>
+               <input type="submit" class="btn btn-ddd btn-lg btn-block" name="submitA" id="submitA" value="Login">
+                </form>
+              </div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledBy="profile-tab">
+              <div class="login_form">
+             
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>  
+    <div class="footer">
+      <p>Copyright © 2015 Stony Brook University Test Center</p>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/icheck.js"></script>
+    <script src="js/login.js"></script>
+    <script>
+$(document).ready(function(){
+  $('input').iCheck({
+    checkboxClass: 'icheckbox_square-green',
+    radioClass: 'iradio_square-green',
+    increaseArea: '20%' // optional
+  });
+});
+</script>
+  </body>
+</html>
