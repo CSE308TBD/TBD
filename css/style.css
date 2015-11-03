@@ -48,7 +48,7 @@ body{font-family:"宋体";height:100%;}
 .left_side .l_msg3{color:#fff;font-size:24px;text-align:center;}
 .left_side .l_msg3 a{color:#fff;}
 
-.main_content{background:#f1f1f1;position:absolute;right:0;top:0;bottom: 0;left:268px;}
+.main_content{background:#f1f1f1;position:absolute;right:0;top:0;bottom: 0;left:268px;overflow:auto;}
 
 
 .footer{height:50px;background:url(../images/bt_bg.jpg) repeat-x;width:100%;}

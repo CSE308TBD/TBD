@@ -17,8 +17,14 @@ if($_SESSION['Role'] !== 'Instructor')
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>Intsrutor Home Page</title>
+	
+	<link href="css/apps.css" rel="stylesheet">
+    <link href="css/square/green.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
+
     <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 </head>
 <body class="pos_r">	
 	<div class="header of_hidden">
@@ -50,6 +56,77 @@ if($_SESSION['Role'] !== 'Instructor')
 				?></div>
 			</div>
 			<div class="main_content">
+				<h2>My Requests</h2>
+				<table class="table table-striped table-bordered table-hover">
+					<thead>
+					  <tr>
+						<th>Test ID</th>
+						<th>Start Time</th>
+						<th>End Time</th>
+						<th>Status</th>
+						<th>Addition</th>
+					  </tr>
+					</thead>
+					<tbody>
+					  <?php
+							$uid = $_SESSION['userID'];
+							$sql = "select * from test where ID_INSTRUCTOR='$uid' order by endtime";
+							$result = mysql_query($sql);
+							$times = 0;
+							while ($times<5){
+								$times += 1;
+								$row = mysql_fetch_assoc($result);
+								if($row == null) break;
+								$tid = $row['ID_TEST'];
+								$start = $row['StartTime'];
+								$end = $row['EndTime'];
+								$status = $row['Status'];
+								$cid = $row['ID_CLASS'];
+								$duration = $row['Duration'];
+							
+								echo "<tr>";
+								echo "<td><a href='ITestDetail.php?tid=".$tid."'>$tid</a></td>";
+								echo "<td>$start</td>";
+								echo "<td>$end</td>";
+								if($status==null){	//pending request
+									echo "<td><font color='orange'>Pending</font></td>";
+									//echo "<td><a href='Icancel.php?tid=".$tid."'>Cancel</a></td>";
+								?>
+									<td><a href="Icancel.php?tid=<?php echo $tid; ?>" onclick="return confirm('Are you sure to CANCEL request: <?php echo $tid; ?>?');">Cancel Request</a></td>
+								<?php
+								}
+								elseif($status==0){//denied request
+									echo "<td><font color='red'>Denied</font></td>";
+									echo "<td><a href='ISchedul.php'>Reschedule</a></td>";
+								}
+								elseif($status==1){//approved request
+									if($cid!=null){//course, use ID_CLASS
+										$sql = "select * from roster where ID_TEST='$cid'";
+									}
+									else
+									{//ad hoc, use ID_TEST
+										$sql = "select * from roster where ID_TEST='$tid'";
+									}
+									$num = mysql_query($sql);
+									$total = mysql_num_rows($num);
+									
+									$sql = "select * from appointment where ID_TEST='$tid' and Status=1";//Status=1 means attended and finished test
+									$num = mysql_query($sql);
+									$att = mysql_num_rows($num);
+									
+									$IDetailApp = 'IDetailApp.php?tid='.$tid.'&dur='.$duration;
+								// $IDetailApp = 'IDetailApp.php?tid='.$tid.'&cid='.$cid.'&dur='.$duration;
+									echo "<td><font color='green'>Approved</font></td>";
+									echo "<td><a href=$IDetailApp>$att attended / $total total</a></td>";
+								}
+								echo "</tr>";
+							}
+						?>
+					</tbody>
+			
+				</table>
+				<div align='right'><a href='IRequest.php'><font color='red'>More...</font></a></div>
+				<div align='middle'><form><button class="btn btn-ddd btn-lg btn-block" type='submit' formaction='ISchedul.php'>Submit a new request</button></form></div>
 			</div>
 		</div>	
 	</div>	
