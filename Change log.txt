@@ -1,4 +1,11 @@
-2015-10-21  V 0.2 Finished Authentication and all user interface templates. 
-            Distibute this version to ohter teammeambers so that they can work on their part.
-2015-10-29  Implemented https protocol. Using md5 encryption during login process.
-2015-11-03  Set up github.
+2015-10-21  By Xinhe. Finished Authentication and all user interface templates. 
+            Distribute this version to other team meambers so that they can work on their part.
+		
+2015-10-29  By Xinhe. Implemented https protocol. Using md5 encryption during login process.
+		Modify  loginI.php
+		        loginA.php
+		        loginS.php
+		     
+2015-11-30  By Xinhe. Finished Check-in function for Admin.
+		Modify  AApp.php
+
