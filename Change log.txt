@@ -9,3 +9,6 @@
 2015-11-30  By Xinhe. Finished Check-in function for Admin.
 		Modify  AApp.php
 
+2015-11-03  By Suwen. Uploaded Upload.php, displayAppointment.php and eidtCenterInfo.php files.
+
+2015-11-03  By Suwen. Minor changes to displayAppointment.php. 
