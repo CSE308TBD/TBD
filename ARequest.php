@@ -5,8 +5,7 @@ if(!isset($_SESSION['userID'])){
   // echo 'Please Log in!';
    header("Location:login.html");
    exit();
-}
-if($_SESSION['Role'] !== 'Administrator')
+}if($_SESSION['Role'] !== 'Administrator')
 {
  
    header("Location:login.html");
@@ -18,7 +17,6 @@ if($_SESSION['Role'] !== 'Administrator')
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>Test Request</title>
     <link href="css/style.css" rel="stylesheet">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
     <script src="js/jquery.js"></script>
 </head>
 <body class="pos_r">	
@@ -50,59 +48,6 @@ if($_SESSION['Role'] !== 'Administrator')
 				?></div>
 			</div>
 			<div class="main_content">
-				<h2>Pending Requests</h2>
-				<table class="table table-striped table-bordered table-hover">
-					<thead>
-					  <tr>
-						<th>Test ID</th>
-						<th>Test Course</th>
-						<th>Instructor</th>
-						<th>Start Time</th>
-						<th>End Time</th>
-						<th>Candidates No.</th>
-						<th>Current Utilization</th>
-						<th>Utilization with this test</th>
-						<th>Actions</th>
-					  </tr>
-					</thead>
-					<tbody>
-					<?php
-						//query all test
-						$sql = "select * from test where Status is null order by StartTime";
-						$result = mysql_query($sql);
-						while($row = mysql_fetch_assoc($result)){
-							$tid = $row['ID_TEST'];
-							$cid = $row['ID_CLASS'];
-							$iid = $row['ID_INSTRUCTOR'];
-							$st = $row['StartTime'];
-							$et = $row['EndTime'];
-							
-							$sql = "select * from roster where ID_TEST='$tid'";
-							$canNum = mysql_num_rows(mysql_query($sql));
-							
-							//Utilization
-							$cutil = 'NA';
-							$eutil = 'NA';
-							
-							//output the table html
-							?>
-							<tr>
-								<td><?php echo $tid; ?></td>
-								<td><?php echo $cid; ?></td>
-								<td><?php echo $iid; ?></td>
-								<td><?php echo $st; ?></td>
-								<td><?php echo $et; ?></td>
-								<td><?php echo $canNum; ?></td>
-								<td><?php echo $cutil; ?></td>
-								<td><?php echo $eutil; ?></td>
-								<td><form><button type='submit' formaction='ARequest_Approve.php'>Approve</button>
-										  <button type='submit' formaction='ARequest_Deny.php'>Deny</button></form></td>
-							</tr>
-							<?php
-						}
-					?>
-					</tbody>
-				</table>
 			</div>
 		</div>	
 	</div>	
