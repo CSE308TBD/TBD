@@ -71,7 +71,7 @@ $(document).ready(function() {
    {
     if(response == 'success')
 	{
-   window.location="AHome.php";}
+   window.location="Ahome.php";}
     else
      $("#alert2").html("<p style='color:red'>Invalid username and/or password.</p>"); 
    }
