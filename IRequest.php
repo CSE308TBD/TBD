@@ -1,6 +1,7 @@
 <?php
 session_start();
 include('connect.php');
+include('ITermSwitch.php');
 if(!isset($_SESSION['userID'])){
   // echo 'Please Log in!';
    header("Location:login.html");
@@ -68,9 +69,16 @@ if(!isset($_SESSION['userID'])){
 					</thead>
 					<tbody>
 						<?php
+						//generate a list of this ins' requests that sort by terms (TestID | StartTime | EndTime | Status | Actions)
 							$uid = $_SESSION['userID'];
+							
+							//find current term
+							$temp = date('Ym',time());//201511
+							$cterm = termSwitch(substr($temp,-2)).' '.substr($temp,0,-2);
+							echo "<tr><th colspan='5'>Current Term: ".$cterm."</th></tr>";
+							
 							$sql = "select * from test where ID_INSTRUCTOR='$uid' order by endtime";
-							$result = mysql_query($sql);
+							$result = mysql_query($sql) or die('Error: '.mysql_error());
 							while ($row = mysql_fetch_assoc($result)){
 								$tid = $row['ID_TEST'];
 								$start = $row['StartTime'];
@@ -78,44 +86,68 @@ if(!isset($_SESSION['userID'])){
 								$status = $row['Status'];
 								$cid = $row['ID_CLASS'];
 								$duration = $row['Duration'];
+								
+								//test's term
+								if($cid!=null){$term = termSwitch(substr($cid, -4));}//course
+								else//ad hoc
+								{
+									//find ad hoc's term by its start time (Fall:	SEP-DEC;	Winter: JAN;	Spring:	FEB-MAY;	Summer: JUN)
+									$temp = date_create($start)->format('Ym');//201511
+									$term = termSwitch(substr($temp,-2)).' '.substr($temp,0,-2);
+								}
+								
+								//ONLY Show current and future terms'
+								if(termSwitch($term)>=termSwitch($cterm)){
 							
-								echo "<tr>";
-								echo "<td><a href='ITestDetail.php?tid=".$tid."'>$tid</a></td>";
-								echo "<td>$start</td>";
-								echo "<td>$end</td>";
-								if($status==null){	//pending request
-									echo "<td><font color='orange'>Pending</font></td>";
-									//echo "<td><a href='Icancel.php?tid=".$tid."'>Cancel</a></td>";
-					?>
-							<td><a href="Icancel.php?tid=<?php echo $tid; ?>" onclick="return confirm('Are you sure to CANCEL request: <?php echo $tid; ?>?');">Cancel Request</a></td>
-					<?php
-								}
-								elseif($status==0){//denied request
-									echo "<td><font color='red'>Denied</font></td>";
-									echo "<td><a href='ISchedul.php'>Reschedule</a></td>";
-								}
-								elseif($status==1){//approved request
-									if($cid!=null){//course, use ID_CLASS
-										$sql = "select * from roster where ID_TEST='$cid'";
+									//sort by term
+									if($term!=$cterm){
+										$cterm = $term;
+										echo "<tr><th colspan='5'>".$cterm."</th></tr>";
 									}
-									else
-									{//ad hoc, use ID_TEST
-										$sql = "select * from roster where ID_TEST='$tid'";
+								
+									echo "<tr>";
+									echo "<td><a href='ITestDetail.php?tid=".$tid."'>$tid</a></td>";
+									echo "<td>$start</td>";
+									echo "<td>$end</td>";
+									if($status==null){	//INS_USE_CASE_3: PENDING REQUEST, Instructor can cancel his pending requests
+										echo "<td><font color='orange'>Pending</font></td>";
+										//echo "<td><a href='Icancel.php?tid=".$tid."'>Cancel</a></td>";
+									?>
+										<td><a href="Icancel.php?tid=<?php echo $tid; ?>" onclick="return confirm('Are you sure to CANCEL request: <?php echo $tid; ?>?');">Cancel Request</a></td>
+									<?php
 									}
-									$num = mysql_query($sql);
-									$total = mysql_num_rows($num);
-									
-									$sql = "select * from appointment where ID_TEST='$tid' and Status=1";//Status=1 means attended and finished test
-									$num = mysql_query($sql);
-									$att = mysql_num_rows($num);
-									
-									$IDetailApp = 'IDetailApp.php?tid='.$tid.'&dur='.$duration;
-							// $IDetailApp = 'IDetailApp.php?tid='.$tid.'&cid='.$cid.'&dur='.$duration;
-									echo "<td><font color='green'>Approved</font></td>";
-									echo "<td><a href=$IDetailApp'>$att attended / $total total</a></td>";
-								}
-								echo "</tr>";
-							}
+									elseif($status==0){//DENIED REQUEST, Instructor can reschedule a request
+										echo "<td><font color='red'>Denied</font></td>";
+										echo "<td><a href='ISchedul.php'>Reschedule</a></td>";
+									}
+									elseif($status==1){//INS_USE_CASE_4: APPROVED REQUEST, show appointment details
+										//query total number of students that should take the test
+										if($cid!=null){//course, use ID_CLASS and ID_STUDENT in rosterC
+											$sql = "select * from rosterc where ID_CLASS='$cid'";
+										}
+										else
+										{//ad hoc, use ID_TEST and ID_STUDENT in roster
+											$sql = "select * from roster where ID_TEST='$tid'";
+										}
+										$num = mysql_query($sql)or die('Error: '.mysql_error());;
+										$total = mysql_num_rows($num);
+										
+										//query the number of students that attended the test
+										$sql = "select * from appointment where ID_TEST='$tid' and Status=1";//Status=1 means attended and finished test
+										$num = mysql_query($sql) or die('Error: '.mysql_error());
+										$att = mysql_num_rows($num);
+										
+										// $IDetailApp = 'IDetailApp.php?tid='.$tid.'&dur='.$duration;
+								$IDetailApp = 'IDetailApp.php?tid='.$tid.'&cid='.$cid.'&dur='.$duration;
+										echo "<td><font color='green'>Approved</font></td>";
+										echo "<td><a href=$IDetailApp'>$att attended / $total total</a></td>";
+									}
+									echo "</tr>";
+								
+								}//end if(term>=cterm)
+							}//end while
+							
+							mysql_close($con);//close db
 						?>
 					</tbody>
 				</table>

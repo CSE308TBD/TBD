@@ -1,6 +1,7 @@
 <?php
 session_start();
 include('connect.php');
+include('ITermSwitch.php');
 if(!isset($_SESSION['userID'] )){
  
    header("Location:login.html");
@@ -57,6 +58,8 @@ if($_SESSION['Role'] !== 'Instructor')
 			</div>
 			<div class="main_content">
 				<?php
+				//query a specific request details with tid
+					//get cid
 					$tid = $_GET['tid'];
 					$sql = "select * from test where ID_TEST='$tid'";
 					$result = mysql_query($sql);
@@ -69,12 +72,13 @@ if($_SESSION['Role'] !== 'Instructor')
 					if($cid!=null){//course
 						$course = $temp['Subject'].$temp['CatalogNumber'];
 						$section = $temp['Section'];
-						$term = $temp['Term'];
-					}else{//ad hoc
-						$course = "<font color='red'>NA</font>";
-						$section = "<font color='red'>NA</font>";
-						$term = "<font color='red'>NA</font>";
+						$term = termSwitch($temp['Term']);
 					}
+					// else{//ad hoc
+						// $course = "<font color='red'>NA</font>";
+						// $section = "<font color='red'>NA</font>";
+						// $term = "<font color='red'>NA</font>";
+					// }
 					
 					$iid = $row['ID_INSTRUCTOR'];
 					$duration = $row['Duration'];
@@ -88,6 +92,10 @@ if($_SESSION['Role'] !== 'Instructor')
 						<th>Test ID</th>
 						<td><?php echo $tid; ?></td>
 					</tr>
+					
+					<?php
+					if($cid!=null){//ad hoc, do not show the 'Course,Section,Term' attributes
+					?>
 					<tr>
 						<th>Test Course</th>
 						<td><?php echo $course; ?></td>
@@ -100,6 +108,10 @@ if($_SESSION['Role'] !== 'Instructor')
 						<th>Term</th>
 						<td><?php echo $term; ?></td>
 					</tr>
+					<?php
+						}
+					?>
+					
 					<tr>
 						<th>Instructor</th>
 						<td><?php echo $iid; ?></td>
@@ -117,23 +129,9 @@ if($_SESSION['Role'] !== 'Instructor')
 						<td><?php echo $endDT; ?></td>
 					</tr>
 					<?php
-						if($status==null){	//pending request
-							echo "<tr><th>Student</th><td><font color='red'>NA/NA</font></td></tr>";
-							echo "<tr><th>Status</th><td><font color='orange'>Pending</font></td></tr>";
-					?>
-							</table>
-							<a href="Icancel.php?tid=<?php echo $tid; ?>" onclick="return confirm('Are you sure to CANCEL request: <?php echo $tid; ?>?');">Cancel Request</a>
-					<?php
-						}
-						elseif($status==0){//denied request
-							echo "<tr><th>Student</th><td><font color='red'>NA/NA</font></td></tr>";
-							echo "<tr><th>Status</th><td><font color='red'>Denied</font></td></tr>";
-							echo "</table><a href='ISchedul.php'>Reschedule a Test</a>";
-						}
-						elseif($status==1){//approved request
-							if($cid!=null)
+						if($cid!=null)
 							{//course, use ID_CLASS
-								$sql = "select * from roster where ID_TEST='$cid'";
+								$sql = "select * from rosterc where ID_CLASS='$cid'";
 							}
 							else
 							{//ad hoc, use ID_TEST
@@ -141,18 +139,55 @@ if($_SESSION['Role'] !== 'Instructor')
 							}
 							$num = mysql_query($sql);
 							$total = mysql_num_rows($num);
+							$nameList = '';
+							while($name = mysql_fetch_assoc($num)){
+								$nameList = $nameList.$name['ID_STUDENT']."<br>";
+							}
+							
+							echo "<tr><th>Students</th><td>".$nameList."</td></tr>";
+							
+					
+					
+					
+					
+						if($status==null){	//pending request
+							// echo "<tr><th>Student</th><td><font color='red'>NA/NA</font></td></tr>";
+							echo "<tr><th>Status</th><td><font color='orange'>Pending</font></td></tr>";
+					?>
+							</table>
+							<a href="Icancel.php?tid=<?php echo $tid; ?>" onclick="return confirm('Are you sure to CANCEL request: <?php echo $tid; ?>?');">Cancel Request</a>
+					<?php
+						}
+						elseif($status==0){//denied request
+							// echo "<tr><th>Student</th><td><font color='red'>NA/NA</font></td></tr>";
+							echo "<tr><th>Status</th><td><font color='red'>Denied</font></td></tr>";
+							echo "</table><a href='ISchedul.php'>Reschedule a Test</a>";
+						}
+						elseif($status==1){//approved request
+							// if($cid!=null)
+							// {//course, use ID_CLASS
+								// $sql = "select * from rosterc where ID_CLASS='$cid'";
+							// }
+							// else
+							// {//ad hoc, use ID_TEST
+								// $sql = "select * from roster where ID_TEST='$tid'";
+							// }
+							// $num = mysql_query($sql);
+							// $total = mysql_num_rows($num);
 							
 							$sql = "select * from appointment where ID_TEST='$tid' and Status=1";//Status=1 means attended and finished test
 							$num = mysql_query($sql);
 							$att = mysql_num_rows($num);
 							
-							$IDetailApp = 'IDetailApp.php?tid='.$tid.'&dur='.$duration;
-							// $IDetailApp = 'IDetailApp.php?tid='.$tid.'&cid='.$cid.'&dur='.$duration;
-							echo "<tr><th>Student</th>";
+							// $IDetailApp = 'IDetailApp.php?tid='.$tid.'&dur='.$duration;
+							$IDetailApp = 'IDetailApp.php?tid='.$tid.'&cid='.$cid.'&dur='.$duration;
+							echo "<tr><th>Appointments</th>";
 							echo "<td><a href=$IDetailApp>$att attended / $total total</a></td></tr>";
 							echo "<tr><th>Status</th><td><font color='green'>Approved</font></td></tr>";
 							echo "</table><a href= $IDetailApp>Appointment and Attendance Detail</a>";
 						}
+						
+						mysql_close($con);//close db
 					?>
 				
 			</div>
