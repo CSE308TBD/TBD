@@ -58,7 +58,7 @@ if($_SESSION['Role'] !== 'Instructor')
 			<div class="main_content">
 				<?php
 					$tid = $_GET['tid'];
-					// $cid = $_GET['cid'];//$cid is the course class id, CSE308-1158
+					$cid = $_GET['cid'];//$cid is the course class id, CSE308-1158
 					$dur = $_GET['dur'];//duration
 				?>
 				<h2>Appointment and Attendance Detail for <?php echo $tid; ?></h2>
@@ -73,16 +73,16 @@ if($_SESSION['Role'] !== 'Instructor')
 					
 				<?php
 					//query netid
-					// if($cid!=null) //course
-					// {
-						// $sql = "select * from roster where ID_TEST='$cid'";
-					// }
-					// else	//ad hoc
+					if($cid!=null) //course
+					{
+						$sql = "select * from rosterc where ID_CLASS='$cid'";
+					}
+					else	//ad hoc
 					{
 						$sql = "select * from roster where ID_TEST='$tid'";
 					}
-					$result = mysql_query($sql);
-					$total = mysql_num_rows($result);
+					$result = mysql_query($sql) or die('Error: '.mysql_error());
+					$total = mysql_num_rows($result) or die('Error: '.mysql_error());
 					$na = 0;
 					$pending = 0;
 					$att = 0;
@@ -93,7 +93,7 @@ if($_SESSION['Role'] !== 'Instructor')
 						
 						//query student name
 						$sql = "select * from users where UserID='$sid'";
-						$sinfo = mysql_fetch_assoc(mysql_query($sql));
+						$sinfo = mysql_fetch_assoc(mysql_query($sql) or die('Error: '.mysql_error()));
 						$name = $sinfo['FirstName'].' '.$sinfo['LastName'];
 						
 						echo "<tr><td>$sid</td><td>$name</td>";
@@ -134,6 +134,8 @@ if($_SESSION['Role'] !== 'Instructor')
 					echo "Made appointment and waiting to take the test: $pending</br>";
 					echo "Made appointment and Checked In: $att</br>";
 					echo "Made appointment but Not showed: $ns</div>";
+					
+					mysql_close($con);//close db
 				?>
 				
 			</div>

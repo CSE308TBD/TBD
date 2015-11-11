@@ -69,12 +69,13 @@ if($_SESSION['Role'] !== 'Instructor')
 					</thead>
 					<tbody>
 					  <?php
+							//generate 5 requests of this Ins. that ends most recently (TestID | StartTime | EndTime | Status | Actions)
 							$uid = $_SESSION['userID'];
 							$sql = "select * from test where ID_INSTRUCTOR='$uid' order by endtime";
-							$result = mysql_query($sql);
+							$result = mysql_query($sql) or die('Error: '.mysql_error());
 							$times = 0;
 							while ($times<5){
-								$times += 1;
+								
 								$row = mysql_fetch_assoc($result);
 								if($row == null) break;
 								$tid = $row['ID_TEST'];
@@ -83,44 +84,51 @@ if($_SESSION['Role'] !== 'Instructor')
 								$status = $row['Status'];
 								$cid = $row['ID_CLASS'];
 								$duration = $row['Duration'];
+								
+								if(date_create($end)->format('Ymd')<date('Ymd',time())) continue;
+								$times += 1;
 							
 								echo "<tr>";
 								echo "<td><a href='ITestDetail.php?tid=".$tid."'>$tid</a></td>";
 								echo "<td>$start</td>";
 								echo "<td>$end</td>";
-								if($status==null){	//pending request
+								if($status==null){	//INS_USE_CASE_3: PENDING REQUEST, Instructor can cancel his pending requests
 									echo "<td><font color='orange'>Pending</font></td>";
 									//echo "<td><a href='Icancel.php?tid=".$tid."'>Cancel</a></td>";
 								?>
 									<td><a href="Icancel.php?tid=<?php echo $tid; ?>" onclick="return confirm('Are you sure to CANCEL request: <?php echo $tid; ?>?');">Cancel Request</a></td>
 								<?php
 								}
-								elseif($status==0){//denied request
+								elseif($status==0){//DENIED REQUEST, Instructor can reschedule a request
 									echo "<td><font color='red'>Denied</font></td>";
 									echo "<td><a href='ISchedul.php'>Reschedule</a></td>";
 								}
-								elseif($status==1){//approved request
-									if($cid!=null){//course, use ID_CLASS
-										$sql = "select * from roster where ID_TEST='$cid'";
+								elseif($status==1){//INS_USE_CASE_4: APPROVED REQUEST, show appointment details
+									//query total number of students that should take the test
+									if($cid!=null){//course, use ID_CLASS and ID_STUDENT in rosterC
+										$sql = "select * from rosterc where ID_CLASS='$cid'";
 									}
 									else
-									{//ad hoc, use ID_TEST
+									{//ad hoc, use ID_TEST and ID_STUDENT in roster
 										$sql = "select * from roster where ID_TEST='$tid'";
 									}
-									$num = mysql_query($sql);
+									$num = mysql_query($sql) or die('Error: '.mysql_error());
 									$total = mysql_num_rows($num);
 									
+									//query the number of students that attended the test
 									$sql = "select * from appointment where ID_TEST='$tid' and Status=1";//Status=1 means attended and finished test
-									$num = mysql_query($sql);
+									$num = mysql_query($sql) or die('Error: '.mysql_error());
 									$att = mysql_num_rows($num);
 									
-									$IDetailApp = 'IDetailApp.php?tid='.$tid.'&dur='.$duration;
-								// $IDetailApp = 'IDetailApp.php?tid='.$tid.'&cid='.$cid.'&dur='.$duration;
+									// $IDetailApp = 'IDetailApp.php?tid='.$tid.'&dur='.$duration;
+								$IDetailApp = 'IDetailApp.php?tid='.$tid.'&cid='.$cid.'&dur='.$duration;
 									echo "<td><font color='green'>Approved</font></td>";
 									echo "<td><a href=$IDetailApp>$att attended / $total total</a></td>";
 								}
 								echo "</tr>";
 							}
+							
+							mysql_close($con);//close db
 						?>
 					</tbody>
 			
