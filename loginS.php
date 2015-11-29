@@ -15,7 +15,7 @@
              if($rows){//0 false 1 true
 			 		session_start();
 			 		$row = mysql_fetch_assoc($result);
-					$userID = $row['UserID'];
+					$userID = $row['UserId'];
 			 		$firstName = $row['FirstName'];
 					$lastName = $row['LastName'];
 					$Role = $row['Role'];
