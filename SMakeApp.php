@@ -49,6 +49,12 @@ if(!isset($_SESSION['userID'])){
 				?></div>
 			</div>
 			<div class="main_content">
+				<form action="SMakeAppResult.php" method="post">
+				ExamID: <input type="text" name="examId"><br>
+				<input type="submit">
+			</form>
+            
+
 			</div>
 		</div>	
 	</div>	

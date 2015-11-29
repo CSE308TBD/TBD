@@ -14,6 +14,7 @@ if(!isset($_SESSION['userID'])){
    header("Location:login.html");
    exit();
 }
+
 if( isset($_POST['id']) && $_POST['id'] ) {
 	$buffer = mysql_query("select * from appointment where ID_STUDENT = '$_POST[id]' limit 1");
 	$row = mysql_fetch_array($buffer);

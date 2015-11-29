@@ -1,7 +1,7 @@
-<?php
-    $server="localhost";//server
-    $db_username="root";//username
-    $db_password="11111111";//password
+    <?php
+    $server="43.242.129.31";//server
+    $db_username="gzzkxzc1_tbd";//username
+    $db_password="2015cse308";//password
     $con = mysql_connect($server,$db_username,$db_password);//connect
     if(!$con){
         die("can't connect".mysql_error());//error

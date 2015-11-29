@@ -1,13 +1,13 @@
 <?PHP
     
-    $is_ajax = $_REQUEST['is_ajax'];
+ $is_ajax = $_REQUEST['is_ajax'];
  if(isset($is_ajax) && $is_ajax)
  {
 
     include('connect.php');//connect database
     $name = $_REQUEST['name'];//post the login name
    $passowrd = md5($_REQUEST['password']);//post the password
-	$sql = "select * from Users where UserId = '$name' AND Password='$passowrd' AND Role = 'Student'";//check login
+	$sql = "select * from Users where UserID = '$name' AND Password='$passowrd' AND Role = 'Student'";//check login
     $result = mysql_query($sql);//sql
     $rows=mysql_num_rows($result);//return 
 	
@@ -15,7 +15,7 @@
              if($rows){//0 false 1 true
 			 		session_start();
 			 		$row = mysql_fetch_assoc($result);
-					$userID = $row['UserID'];
+					$userID = $row['UserId'];
 			 		$firstName = $row['FirstName'];
 					$lastName = $row['LastName'];
 					$Role = $row['Role'];

@@ -49,6 +49,23 @@ if(!isset($_SESSION['userID'])){
 				?></div>
 			</div>
 			<div class="main_content">
+				<?php
+				$userId=$_SESSION['userID'];
+			    include('connect.php');
+                $sql = "select * from appointment where ID_STUDENT = '$userId' ";//get the test result
+                $result = mysql_query($sql);//sql
+                if(mysql_num_rows($result)>0) // the test exist 
+                   {
+                   	while($row=mysql_fetch_assoc($result))
+                   	echo "id: ".$row["appId"]. " CourseName: ".$row["ID_TEST"]. " startTime: ".$row["StartTime"]. "<br>";
+                   	
+                   }
+
+				?>
+				<form action="SAppCancel.php" method="post">
+              appId: <input type="text" name="appId"><br>
+             <input type="submit" name="cancel" value="cancel the appiontment">
+             </form>
 			</div>
 		</div>	
 	</div>	

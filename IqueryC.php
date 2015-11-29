@@ -9,7 +9,9 @@
 #	if(isset($is_ajax) && $is_ajax)
 {
     include('connect.php');//connect database
-    $idC = $_REQUEST['idC'];
+    
+	//construct the tid AND insert into table test for the course: CSE308-01_1158_ex3
+	$idC = $_REQUEST['idC'];
 	$sectionC = $_REQUEST['sectionC'];
 	$termC = $_REQUEST['termC'];
 	$sub = $idC[0].$idC[1].$idC[2];
